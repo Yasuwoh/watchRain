@@ -41,27 +41,29 @@ class YOLP_Weather:
         return json.load (ret) 
 
 class Weather_DB:
+    @staticmethod
+    def rain_severity (rainfall):
+        if rainfall <= 0:
+            return 0
+        elif rainfall <= 10:
+            return 10
+        elif rainfall <= 20:
+            return 20
+        elif rainfall <= 30:
+            return 30
+        elif rainfall <= 50:
+            return 40
+        elif rainfall <= 80:
+            return 50
+        else:
+            return 60
+
     def __init__ (self, db):
         self.db = sqlite3.connect (db,
                 detect_types = sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES
                 )
         self.db.row_factory = sqlite3.Row
-        def rain_severity (rainfall):
-            if rainfall <= 0:
-                return 0
-            elif rainfall <= 10:
-                return 10
-            elif rainfall <= 20:
-                return 20
-            elif rainfall <= 30:
-                return 30
-            elif rainfall <= 50:
-                return 40
-            elif rainfall <= 80:
-                return 50
-            else:
-                return 60
-        self.db.create_function (rain_severity.__name__, 1, rain_severity, deterministic = True)
+        self.db.create_function ('rain_severity', 1, self.rain_severity, deterministic = True)
 
         cur = self.db.cursor()
         cur.executescript ("""
