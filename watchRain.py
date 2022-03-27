@@ -252,9 +252,6 @@ def main():
 
     # パス名(チルダ)を解決
     args.config = os.path.expanduser (args.config)
-    args.db = os.path.expanduser (args.db)
-    args.sound_dir = os.path.expanduser (args.sound_dir)
-
     # コンフィグファイルを読む
     if os.path.exists (args.config):
         config = configparser.ConfigParser()
@@ -265,6 +262,9 @@ def main():
             args.coordinates = config['DEFAULT']['coordinates']
         if 'sound-dir' in config['DEFAULT']:
             args.sound_dir = config['DEFAULT']['sound-dir']
+    # パス名(チルダ)を解決
+    args.db = os.path.expanduser (args.db)
+    args.sound_dir = os.path.expanduser (args.sound_dir)
 
     if args.action in ['fetch-notify', 'fetch-only']:
         if args.app_id is None:
